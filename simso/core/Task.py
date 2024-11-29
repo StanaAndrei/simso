@@ -339,6 +339,9 @@ class SporadicTask(GenericTask):
     @property
     def list_activation_dates(self):
         return self._task_info.list_activation_dates
+        
+
+
 
 
 task_types = {
@@ -349,6 +352,8 @@ task_types = {
 
 task_types_names = ["Periodic", "APeriodic", "Sporadic"]
 
+def appen_to_task_types_names(name):
+    task_types_names.append(name)
 
 def Task(sim, task_info):
     """
