@@ -341,13 +341,18 @@ class SporadicTask(GenericTask):
         return self._task_info.list_activation_dates
         
 
-
+class CustomCreatedTask(GenericTask):
+    def execute(self):
+        
+        self._init()
+        
 
 
 task_types = {
     "Periodic": PTask,
     "APeriodic": ATask,
-    "Sporadic": SporadicTask
+    "Sporadic": SporadicTask,
+    "Custom": CustomCreatedTask
 }
 
 task_types_names = ["Periodic", "APeriodic", "Sporadic"]
