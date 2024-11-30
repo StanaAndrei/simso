@@ -345,7 +345,14 @@ class CustomCreatedTask(GenericTask):
     def execute(self):
         
         self._init()
-        
+        for ndate in self.list_activation_dates:
+            yield hold, self, int(ndate * self._sim.cycles_per_ms) \
+                - self._sim.now()
+            self.create_job()
+
+    @property
+    def list_activation_dates(self):
+        return self._task_info.list_activation_dates
 
 
 task_types = {
