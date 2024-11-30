@@ -332,6 +332,7 @@ class SporadicTask(GenericTask):
 
         self._init()
         for ndate in self.list_activation_dates:
+            print('s', self._sim.cycles_per_ms, ndate)
             yield hold, self, int(ndate * self._sim.cycles_per_ms) \
                 - self._sim.now()
             self.create_job()
@@ -343,10 +344,19 @@ class SporadicTask(GenericTask):
 
 class CustomCreatedTask(GenericTask):
     def execute(self):
-        
         self._init()
+        if not self.period:
+            self.period = 1
+
+        print('custom', self._task_info.activation_date)
+        if self._task_info.activation_date:
+            print('custom', self._sim.now())
+            yield hold, self, int(self._task_info.activation_date * self._sim.cycles_per_ms) \
+                - self._sim.now()
+            self.create_job()
+
         for ndate in self.list_activation_dates:
-            yield hold, self, int(ndate * self._sim.cycles_per_ms) \
+            yield hold, self, int(self.period * ndate * self._sim.cycles_per_ms) \
                 - self._sim.now()
             self.create_job()
 
