@@ -9,6 +9,8 @@ from .CSDP import CSDP
 import os
 import os.path
 
+from simsogui.Global import GlobalData
+
 
 class TaskInfo(object):
     """
