@@ -6,7 +6,7 @@ from simso.core.Job import Job
 from simso.core.Timer import Timer
 from .CSDP import CSDP
 
-import os
+import os, textwrap
 import os.path
 
 from simsogui.Global import GlobalData
@@ -64,6 +64,8 @@ class TaskInfo(object):
         self.list_activation_dates = list_activation_dates
         self.data = data
         self.preemption_cost = preemption_cost
+        self.custom_task_name = ''
+
 
     @property
     def csdp(self):
@@ -346,21 +348,14 @@ class SporadicTask(GenericTask):
 
 class CustomCreatedTask(GenericTask):
     def execute(self):
-        self._init()
-        if not self.period:
-            self.period = 1
-
-        print('custom', self._task_info.activation_date)
-        if self._task_info.activation_date:
-            print('custom', self._sim.now())
-            yield hold, self, int(self._task_info.activation_date * self._sim.cycles_per_ms) \
-                - self._sim.now()
-            self.create_job()
-
-        for ndate in self.list_activation_dates:
-            yield hold, self, int(self.period * ndate * self._sim.cycles_per_ms) \
-                - self._sim.now()
-            self.create_job()
+        localDict = {}
+        code = GlobalData.EXAMPLE_CODE
+        if self._task_info.custom_task_name in GlobalData.customTaskNameToCode:
+            code = GlobalData.customTaskNameToCode[self._task_info.custom_task_name]
+        code = textwrap.dedent(code)
+        print(code)
+        exec(code, {'self': self, 'hold': hold}, localDict)
+        return localDict['customExec'](self)
 
     @property
     def list_activation_dates(self):
