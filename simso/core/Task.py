@@ -6,8 +6,10 @@ from simso.core.Job import Job
 from simso.core.Timer import Timer
 from .CSDP import CSDP
 
-import os
+import os, textwrap
 import os.path
+
+from simsogui.Global import GlobalData
 
 
 class TaskInfo(object):
@@ -62,6 +64,8 @@ class TaskInfo(object):
         self.list_activation_dates = list_activation_dates
         self.data = data
         self.preemption_cost = preemption_cost
+        self.custom_task_name = ''
+
 
     @property
     def csdp(self):
@@ -332,9 +336,26 @@ class SporadicTask(GenericTask):
 
         self._init()
         for ndate in self.list_activation_dates:
+            print('s', self._sim.cycles_per_ms, ndate)
             yield hold, self, int(ndate * self._sim.cycles_per_ms) \
                 - self._sim.now()
             self.create_job()
+
+    @property
+    def list_activation_dates(self):
+        return self._task_info.list_activation_dates
+        
+
+class CustomCreatedTask(GenericTask):
+    def execute(self):
+        localDict = {}
+        code = GlobalData.EXAMPLE_CODE
+        if self._task_info.custom_task_name in GlobalData.customTaskNameToCode:
+            code = GlobalData.customTaskNameToCode[self._task_info.custom_task_name]
+        code = textwrap.dedent(code)
+        print(code)
+        exec(code, {'self': self, 'hold': hold}, localDict)
+        return localDict['customExec'](self)
 
     @property
     def list_activation_dates(self):
@@ -344,11 +365,14 @@ class SporadicTask(GenericTask):
 task_types = {
     "Periodic": PTask,
     "APeriodic": ATask,
-    "Sporadic": SporadicTask
+    "Sporadic": SporadicTask,
+    "Custom": CustomCreatedTask
 }
 
 task_types_names = ["Periodic", "APeriodic", "Sporadic"]
 
+def appen_to_task_types_names(name):
+    task_types_names.append(name)
 
 def Task(sim, task_info):
     """
