@@ -41,10 +41,10 @@ This is a free software available under the CeCILL license (GPL compatible).
 
 ## Contributions
 
-Added a feature that enables you to create a custom task at runtime
--This includes the creation of a custom task class with posibility to disable the fields you don't want/need.
--The posibility to give it a custom name
--The posibility inject custom code to define the behaviour of the new task(or to keep the default code which generalizes the previous created task types)
+Added a feature that enables you to create a custom task at runtime <br>
+-This includes the creation of a custom task class with posibility to disable the fields you don't want/need. <br>
+-The posibility to give it a custom name. <br>
+-The posibility inject custom code to define the behaviour of the new task(or to keep the default code which generalizes the previous created task types). <br>
 
-Added a feature that enables you to use what heuristic you want at runtime with P_EDF or P_RM schedulers.
+Added a feature that enables you to use what heuristic you want at runtime with P_EDF or P_RM schedulers. <br>
 You can choose from: decreasing_worst_fit, decreasing_best_fit, decreasing_next_fit, decreasing_first_fit, first_fit, next_fit, worst_fit, best_fit
